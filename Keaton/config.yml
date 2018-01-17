@@ -1,0 +1,44 @@
+#Still in development.
+bungee: false
+Punish_Cmd: ban %player% Unfair Advantage -s
+#Removes alert delays if true.
+debug: false
+logs:
+  enabled: true
+  broadcast: true
+  #In minutes
+  interval: 2
+hwid: ""
+MySQL:
+  Enabled: false
+  IP: localhost
+  Username: root
+  Password: password
+  Name: Fiona
+checks:
+  Speed:
+    enabled: true
+    bannable: true
+    cancelled: false
+    #Turn off different types of Speed.
+    NormalMovements: true
+    Limit: true
+  AimPattern:
+    enabled: true
+    bannable: true
+    cancelled: false
+    #Turn off different types of AimPattern.
+    Meme: true
+    ImpossiblePitch: true
+  Phase:
+    enabled: true
+    bannable: true
+    #Cancelled doesn't affect this check, it is by default.
+    cancelled: false
+    #Modifies whether this check flags or not.
+    silent: true
+  Fly:
+   enabled: true
+   bannable: true
+   cancelled: false
+   velocityLeniency: true

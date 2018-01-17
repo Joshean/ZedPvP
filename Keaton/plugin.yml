@@ -1,0 +1,9 @@
+name: Keaton
+version: 1.0
+main: anticheat.Keaton
+author: funkemunky
+commands:
+    Keaton:
+      aliases: [anticheat]
+    viewlog:
+      aliases: [getlog]

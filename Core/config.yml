@@ -1,0 +1,12 @@
+Announcements:
+  Prefix: "&6&lZedPvP &8> "
+  Messages:
+    - "&aAre you enjoying the server? Help us out by donating at &ohttp://store.zedpvp.com&a!"
+    - "&aNeed help? Ask a staff member using /request!"
+    - "&aGet constant help and get all announcements by joining our &a&o$LINK:Discord$&a!"
+  Links:
+    Discord:
+      Link: "https://discord.gg/S8nGaPe"
+      Hover: "Click to join our Discord"
+      String: "Discord"
+Teamspeak: "ts.zedpvp.com"

@@ -1,0 +1,14 @@
+name: Core
+main: cc.funkemunky.ZedPvP.Core
+version: 1.0
+softdepend: [ProtocolLib, HolographicDisplays]
+author: funkemunky
+commands:
+  rawcast:
+  rename:
+  funkemunky:
+  freeze:
+    aliases: [ss, screenshare]
+  staffmode:
+    aliases: [staff, mod, modmode]
+  hidestaff:

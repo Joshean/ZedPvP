@@ -22,6 +22,7 @@ import anticheat.packets.events.PacketTypes;
 import anticheat.user.User;
 import anticheat.utils.CancelType;
 import anticheat.utils.Color;
+import anticheat.utils.MathUtils;
 import anticheat.utils.PlayerUtils;
 import anticheat.utils.TimerUtils;
 
@@ -33,6 +34,7 @@ public class KillAuraA extends Checks {
 	public Map<UUID, Integer> aimVerbose;
 	private Map<UUID, Long> directionHit;
 	public Map<UUID, Double> yawDif;
+	private Map<UUID, Integer> autismVerbose;
 
 	public KillAuraA() {
 		super("KillAura", ChecksType.COMBAT,  Keaton.getAC(), 14, true, false);
@@ -42,6 +44,7 @@ public class KillAuraA extends Checks {
 		aimVerbose = new HashMap<UUID, Integer>();
 		yawDif = new ConcurrentHashMap<UUID, Double>();
 		directionHit = new HashMap<UUID, Long>();
+		autismVerbose = new HashMap<UUID, Integer>();
 	}
 
 	@Override
@@ -74,6 +77,29 @@ public class KillAuraA extends Checks {
 				user.resetSwingPackets();
 				user.resetUsePackets();
 			}
+		}
+		if(event instanceof PacketKillauraEvent) {
+			PacketKillauraEvent e = (PacketKillauraEvent) event;
+			if(e.getType() != PacketTypes.USE) {
+				return;
+			}
+			
+			Player player = e.getPlayer();
+			User user = Keaton.getUserManager().getUser(player.getUniqueId());
+		    int verbose = autismVerbose.getOrDefault(player.getUniqueId(), 0);
+		    
+		    //if(MathUtils.elapsed(user.getLastFlyPacket(), 51L) && Math.abs(MathUtils.elapsed(user.getLastPosPacket()) - 100) < 2) {
+		    	 //   verbose++;
+		    //} else {
+		    //	    verbose = 0;
+		   // }
+		    
+		    if(verbose > 3) {
+		    	    user.setVL(this, user.getVL(this) + 1);
+		    	    verbose = 0;
+		    	    Alert(player, Color.Gray + "Reason: " + Color.White + "Stupidly Simple " + Color.Gray + "Ping: " + Keaton.getAC().getPing().getPing(player));
+		    }
+		    //autismVerbose.put(player.getUniqueId(), verbose);
 		}
 		if(event instanceof PacketKillauraEvent) {
 			PacketKillauraEvent e = (PacketKillauraEvent) event;
@@ -179,6 +205,9 @@ public class KillAuraA extends Checks {
 			}
 			if(this.lastHit.containsKey(uuid)) {
 				this.lastHit.remove(uuid);
+			}
+			if(this.autismVerbose.containsKey(uuid)) {
+				this.autismVerbose.remove(uuid);
 			}
 		}
 	}

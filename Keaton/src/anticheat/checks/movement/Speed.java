@@ -267,7 +267,6 @@ public class Speed extends Checks {
 				} else if(user.getAirTicks() == 3) {
 					maxSpeed = 0.354;
 					
-					debug("Vector: " + vector);
 					
 					if(speed == 1) {
 						maxSpeed = 0.364;

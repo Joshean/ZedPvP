@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/Users/kachow/Desktop/NerdStuff/EXPORT-Guava-21.0.jar"/>
 	<classpathentry kind="lib" path="/Users/kachow/Desktop/NerdStuff/plugins for later/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="/Users/kachow/Desktop/NerdStuff/Server Versions/spigot-1.8.8-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/Users/kachow/Desktop/NerdStuff/plugins for later/PacketAPI.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

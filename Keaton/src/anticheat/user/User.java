@@ -131,6 +131,9 @@ public class User {
 	@Getter @Setter private double lastYawOffset = 0.0D;
 	@Getter @Setter private long lastPacketHit = 0L;
 	@Getter @Setter private Location lastLocation;
+	@Getter @Setter private long lastFlyPacket = System.currentTimeMillis();
+	@Getter @Setter private long lastPosPacket = System.currentTimeMillis();
+	@Getter @Setter private long lastPosLookPacket = System.currentTimeMillis();
 	@Getter @Setter private ListMultimap<UUID, CustomLocation> playerCustomLocationListMultiMap = ArrayListMultimap.create();
 	public User(Player player) {
 		this.player = player;
@@ -138,6 +141,14 @@ public class User {
 		this.vl = new HashMap<Checks, Integer>();
 	}
 	
+	public long getLastFlyPacket() {
+		return lastFlyPacket;
+	}
+
+	public void setLastFlyPacket(long lastFlyPacket) {
+		this.lastFlyPacket = lastFlyPacket;
+	}
+
 	public double getYawOffset() {
 		return yawOffset;
 	}
@@ -205,6 +216,22 @@ public class User {
 		this.inventoryOpen = inventoryOpen;
 	}
 	
+	public long getLastPosPacket() {
+		return lastPosPacket;
+	}
+
+	public void setLastPosPacket(long lastPosPacket) {
+		this.lastPosPacket = lastPosPacket;
+	}
+
+	public long getLastPosLookPacket() {
+		return lastPosLookPacket;
+	}
+
+	public void setLastPosLookPacket(long lastPosLookPacket) {
+		this.lastPosLookPacket = lastPosLookPacket;
+	}
+
 	public long getLastInvClick() {
 		return lastInvClick;
 	}

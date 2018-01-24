@@ -12,3 +12,6 @@ commands:
   staffmode:
     aliases: [staff, mod, modmode]
   hidestaff:
+  rubies:
+    alias: [ruby]
+  event:

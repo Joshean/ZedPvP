@@ -131,7 +131,7 @@ public class Fly extends Checks {
 			if (OffsetY > 0.0D) {
 				TotalBlocks += OffsetY;
 			}
-			double Limit = 2.0D;
+			double Limit = 2.5D;
 			
 			if(PlayerUtils.isOnGround(player.getLocation()) || PlayerUtils.isOnGround(player.getLocation(), -1.0D) || PlayerUtils.isInWater(player)
 					|| MathUtils.elapsed(user.getLastBlockPlace()) <= 1000L) {

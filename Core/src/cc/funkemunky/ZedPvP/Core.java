@@ -14,6 +14,7 @@ import cc.funkemunky.ZedPvP.cooldowns.CooldownsManager;
 import cc.funkemunky.ZedPvP.economy.RubiesGUI;
 import cc.funkemunky.ZedPvP.economy.RubiesManager;
 import cc.funkemunky.ZedPvP.events.EventManager;
+import cc.funkemunky.ZedPvP.events.koth.KothManager;
 import cc.funkemunky.ZedPvP.listeners.FreezeListener;
 import cc.funkemunky.ZedPvP.listeners.StaffModeListener;
 import cc.funkemunky.ZedPvP.scoreboard.ScoreboardHandler;
@@ -38,6 +39,7 @@ public class Core extends JavaPlugin {
     private StaffModeListener staffMode;
     private RubiesGUI rubyGui;
     private RubiesManager rubyManager;
+    private KothManager kothManager;
     
     private boolean setupEconomy()
     {
@@ -65,6 +67,7 @@ public class Core extends JavaPlugin {
 		eventManager = new EventManager();
 		rubyGui = new RubiesGUI();
 		rubyManager = new RubiesManager();
+		kothManager = new KothManager();
 		
 		frozen = new ArrayList<UUID>();
 		invLock = new ArrayList<UUID>();
@@ -78,6 +81,10 @@ public class Core extends JavaPlugin {
 		new Loadup();
 	}
 
+	public KothManager getKothManager() {
+		return kothManager;
+	}
+	
 	public RubiesManager getRubyManager() {
 		return rubyManager;
 	}

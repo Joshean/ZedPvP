@@ -20,15 +20,27 @@ import cc.funkemunky.ZedPvP.Core;
 import cc.funkemunky.ZedPvP.utils.Color;
 import cc.funkemunky.ZedPvP.utils.Cuboid;
 import cc.funkemunky.ZedPvP.utils.DurationFormatter;
+import cc.funkemunky.ZedPvP.utils.MiscUtils;
 
 public class KothManager {
 	
 	private List<Koth> koths;
 	private List<Koth> activeKoths;
-	
-	@SuppressWarnings("unchecked")
+
 	public KothManager() {
-		koths = Core.getInstance().getConfig().getList("Koths") != null ? (List<Koth>) Core.getInstance().getConfig().getList("Koths") : new ArrayList<Koth>();
+		koths = new ArrayList<Koth>();
+		
+		int i = 0;
+		if(MiscUtils.getConfigKeys("Koths") != null && MiscUtils.getConfigKeys("Koths").size() > 0) {
+			for(String path : MiscUtils.getConfigKeys("Koths")) {
+				Koth koth = (Koth) Core.getInstance().getConfig().get(path);
+				if(koth != null) {
+					koths.add(koth);
+				}
+				i++;
+			}
+		}
+		
 		activeKoths = new ArrayList<Koth>();
 		
 		new BukkitRunnable() {
@@ -43,13 +55,22 @@ public class KothManager {
 		faction.setTag(Color.Blue + name);
 		Koth koth = new Koth(name, new Cuboid(one, two), faction, capTime);
 		koths.add(koth);
-		Core.getInstance().getConfig().set("Koths", koths);
-		Core.getInstance().saveConfig();
+		int i = 0;
+		for(Koth koth2 : koths) {
+			Core.getInstance().getConfig().set("Koths." + i, koth2);
+			Core.getInstance().saveConfig();
+			i++;
+		}
 	}
 	
 	public void removeKoth(Koth koth) {
+		Core.getInstance().getConfig().set("Koths." + koths.indexOf(koth), null);
 		koths.remove(koth);
-		Core.getInstance().getConfig().set("Koths", koths);
+		int i = 0;
+		for(Koth koth2 : koths) {
+			Core.getInstance().getConfig().set("Koths." + i, koth2);
+			i++;
+		}
 		Core.getInstance().saveConfig();
 	}
 	
@@ -107,6 +128,8 @@ public class KothManager {
 		if(!activeKoths.contains(koth)) {
 			activeKoths.add(koth);
 		}
+		koth.setTimeLeft(koth.getDefaultTime());
+		activeKoths.set(activeKoths.indexOf(koth), koth);
 		Bukkit.broadcastMessage(Color.Gold + "[KOTH] " + Color.Blue + koth.getName() + Color.Gray + " koth has been started and can now be contested!");
 	}
 	
@@ -114,6 +137,7 @@ public class KothManager {
 		if(activeKoths.contains(koth)) {
 			activeKoths.remove(koth);
 		}
+		
 		Bukkit.broadcastMessage(Color.Gold + "[KOTH] " + Color.Blue + koth.getName() + Color.Gray + " koth has been stopped!");
 	}
 	
@@ -127,37 +151,44 @@ public class KothManager {
 				while(players.hasNext()) {
 					Player player = players.next();
 					if(player.getWorld().equals(koth.getCuboid().getOne().getWorld())
-							&& player.getLocation().distance(koth.getCuboid().getOne()) < 100
-							&& koth.getCuboid().isInCuboid(player)) {
+							&& koth.getCuboid().isInCuboid(player.getLocation())) {
 						Cuboid cuboid = koth.getCuboid();
 						ArrayList<UUID> playerList = cuboid.getPlayers();
 						playerList.add(player.getUniqueId());
 						cuboid.setPlayers(playerList);
 						koth.setCuboid(cuboid);
+						activeKoths.set(activeKoths.indexOf(koth), koth);
 					} else if(koth.getCuboid().getPlayers().contains(player.getUniqueId()) && !koth.getCuboid().isInCuboid(player)) {
 						Cuboid cuboid = koth.getCuboid();
 						ArrayList<UUID> playerList = cuboid.getPlayers();
 						playerList.remove(player.getUniqueId());
 						cuboid.setPlayers(playerList);
 						koth.setCuboid(cuboid);
+						activeKoths.set(activeKoths.indexOf(koth), koth);
 					}
 					if(koth.getCuboid().getPlayers().size() == 1 && koth.getCuboid().getPlayers().contains(player.getUniqueId())
 							&& koth.getCapping() == null && koth.getCapping() != player) {
 						koth.setCapping(player);
+						activeKoths.set(activeKoths.indexOf(koth), koth);
 						player.sendMessage(Core.getInstance().getPrefix() + Color.Gray + "You are now capping " + Color.Blue + koth.getName() + Color.Gray + ".");
-					} else if(koth.getCuboid().getPlayers().size() <= 1 && !koth.getCuboid().getPlayers().contains(player.getUniqueId())
+					} else if(!koth.getCuboid().getPlayers().contains(player.getUniqueId())
 							&& koth.getCapping() != null && koth.getCapping() == player) {
 						koth.setCapping(null);
+						koth.setTimeLeft(koth.getDefaultTime());
+						activeKoths.set(activeKoths.indexOf(koth), koth);
+						player.sendMessage(Core.getInstance().getPrefix() + Color.Gray + "You are no longer capping " + Color.Blue + koth.getName() + Color.Gray + ".");
 					} else if(koth.getCuboid().getPlayers().size() > 1 && !koth.getCuboid().getPlayers().contains(player.getUniqueId()) && koth.getCapping() != null && koth.getCapping() == player) {
 						ArrayList<UUID> uuids = koth.getCuboid().getPlayers();
 						Random random = new Random();
 						int i = random.nextInt();
 						koth.setCapping(Bukkit.getPlayer(uuids.get(i)));
+						activeKoths.set(activeKoths.indexOf(koth), koth);
 						Bukkit.getPlayer(uuids.get(i)).sendMessage(Core.getInstance().getPrefix() + Color.Gray + "You are now capping " + Color.Blue + koth.getName() + Color.Gray + ".");
 					}
 				}
 				if(koth.getCapping() != null) {
 					koth.setTimeLeft(koth.getTimeLeft() - 100L);
+					activeKoths.set(activeKoths.indexOf(koth), koth);
 				}
 				if(koth.getTimeLeft() <= 0L) {
 					FPlayer fPlayer = FPlayers.getInstance().getByPlayer(koth.getCapping());
@@ -169,6 +200,13 @@ public class KothManager {
 					}
 					
 					stopKoth(koth);
+					this.koths.set(this.koths.indexOf(koth), koth);
+					int i = 0;
+					for(Koth koth2 : this.koths) {
+						Core.getInstance().getConfig().set("Koths." + i, koth2);
+						i++;
+					}
+					Core.getInstance().saveConfig();
 					Bukkit.broadcastMessage(Color.Gold + "[KOTH] " + Color.Blue + koth.getName() + Color.Gray + " has been successfully capped by " + Color.Green + faction.getTag() + Color.Gray + "!");
 				}
 			}

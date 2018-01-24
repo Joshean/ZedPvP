@@ -7,10 +7,13 @@ import cc.funkemunky.ZedPvP.commands.FreezeCommand;
 import cc.funkemunky.ZedPvP.commands.HideStaffCommand;
 import cc.funkemunky.ZedPvP.commands.RawcastCommand;
 import cc.funkemunky.ZedPvP.commands.Rename;
+import cc.funkemunky.ZedPvP.commands.RubiesCommand;
 import cc.funkemunky.ZedPvP.commands.StaffmodeCommand;
 import cc.funkemunky.ZedPvP.commands.TestCommand;
+import cc.funkemunky.ZedPvP.events.EventCommand;
 import cc.funkemunky.ZedPvP.listeners.CommandBlockerListener;
 import cc.funkemunky.ZedPvP.listeners.ConsumeListener;
+import cc.funkemunky.ZedPvP.listeners.CuboidWandListener;
 import cc.funkemunky.ZedPvP.listeners.ElevatorListener;
 import cc.funkemunky.ZedPvP.listeners.EnderpearlListener;
 import cc.funkemunky.ZedPvP.listeners.FreezeListener;
@@ -33,6 +36,8 @@ public class Loadup {
 		Core.getInstance().getCommand("freeze").setExecutor(new FreezeCommand());
 		Core.getInstance().getCommand("staffmode").setExecutor(new StaffmodeCommand());
 		Core.getInstance().getCommand("hidestaff").setExecutor(new HideStaffCommand());
+		Core.getInstance().getCommand("event").setExecutor(new EventCommand());
+		Core.getInstance().getCommand("rubies").setExecutor(new RubiesCommand());
 	}
 	
 	public void registerTasks() {
@@ -47,6 +52,7 @@ public class Loadup {
 		Core.getInstance().getServer().getPluginManager().registerEvents(new ElevatorListener(), Core.getInstance());
 		Core.getInstance().getServer().getPluginManager().registerEvents(new FreezeListener(), Core.getInstance());
 		Core.getInstance().getServer().getPluginManager().registerEvents(new StaffModeListener(), Core.getInstance());
+		Core.getInstance().getServer().getPluginManager().registerEvents(new CuboidWandListener(), Core.getInstance());
 		//ProtocolLib
 		ProtocolLibrary.getProtocolManager().addPacketListener(new CommandBlockerListener(Core.getInstance()));
 	}

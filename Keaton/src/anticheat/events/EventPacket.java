@@ -39,15 +39,15 @@ public class EventPacket implements Listener {
 	    WrappedPacket packet = event.getPacket();
 	    Player player = event.getPlayer();
 	    if(packet.getType().equals("PacketPlayInFlying")) {
-	         Bukkit.broadcastMessage("Flying: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastFlyPacket()));
+	         //Bukkit.broadcastMessage("Flying: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastFlyPacket()));
 	    	     Keaton.getUserManager().getUser(player.getUniqueId()).setLastFlyPacket(System.currentTimeMillis());
 	    }
 	    if(packet.getType().equalsIgnoreCase("PacketPlayInPositionLook")) {
-	         Bukkit.broadcastMessage("PositionLook: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastPosLookPacket()));
+	         //Bukkit.broadcastMessage("PositionLook: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastPosLookPacket()));
 	         Keaton.getUserManager().getUser(player.getUniqueId()).setLastPosLookPacket(System.currentTimeMillis());
 	    }
 	    if(packet.getType().equalsIgnoreCase("PacketPlayInPosition")) {
-	         Bukkit.broadcastMessage("Position: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastPosPacket()));
+	        // Bukkit.broadcastMessage("Position: " + MathUtils.elapsed(Keaton.getUserManager().getUser(player.getUniqueId()).getLastPosPacket()));
 	         Keaton.getUserManager().getUser(player.getUniqueId()).setLastPosPacket(System.currentTimeMillis());
 	    }
 	}

@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -34,7 +35,9 @@ public class KillAuraA extends Checks {
 	public Map<UUID, Integer> aimVerbose;
 	private Map<UUID, Long> directionHit;
 	public Map<UUID, Double> yawDif;
+	private Map<UUID, Location> location;
 	private Map<UUID, Integer> autismVerbose;
+	private Map<UUID, Integer> directionVerbose;
 
 	public KillAuraA() {
 		super("KillAura", ChecksType.COMBAT,  Keaton.getAC(), 14, true, false);
@@ -43,8 +46,11 @@ public class KillAuraA extends Checks {
 		count = new HashMap<UUID, Integer>();
 		aimVerbose = new HashMap<UUID, Integer>();
 		yawDif = new ConcurrentHashMap<UUID, Double>();
+		location = new HashMap<UUID, Location>();
 		directionHit = new HashMap<UUID, Long>();
 		autismVerbose = new HashMap<UUID, Integer>();
+		directionVerbose = new HashMap<UUID, Integer>();
+
 	}
 
 	@Override
@@ -84,9 +90,43 @@ public class KillAuraA extends Checks {
 				return;
 			}
 			
+			if(Keaton.getAC().getPing().getTPS() < 17) {
+				return;
+			}
+			
 			Player player = e.getPlayer();
+			Entity entity = e.getEntity();
 			User user = Keaton.getUserManager().getUser(player.getUniqueId());
-		    int verbose = autismVerbose.getOrDefault(player.getUniqueId(), 0);
+			
+			Location location = this.location.getOrDefault(player.getUniqueId(), player.getLocation());
+			int verbose = aimVerbose.getOrDefault(player.getUniqueId(), 0);
+			
+			if((Math.abs(MathUtils.getRotations(location, entity.getLocation())[0] - location.getYaw()) < 2D && MathUtils.getYawDifference(player.getLocation(), location) > 9) 
+					|| (Math.abs(MathUtils.getRotations(location, entity.getLocation())[0] - location.getYaw()) < 4.0D && MathUtils.getYawDifference(player.getLocation(), location) > 40) 
+					|| (Math.abs(entity.getVelocity().length()) > 0.1 && user.getDeltaXZ() > 0.2 && Math.abs(MathUtils.getRotations(location, entity.getLocation())[0] - location.getYaw()) < 2 && MathUtils.getYawDifference(player.getLocation(), location) > 1.4)) {
+				verbose = Math.abs(MathUtils.getRotations(location, entity.getLocation())[0] - location.getYaw()) < 1.2 || (Math.abs(entity.getVelocity().length()) > 0.1 && user.getDeltaXZ() > 0.2) ? verbose + 2 : verbose + 1;
+				//debug("Verbse (+1): " + verbose + " Rotation: " + MathUtils.getRotations(location, entity.getLocation())[0] + " Yaw: " + location.getYaw());
+			} else {
+				verbose = verbose > 0 ? verbose - 1 : verbose;
+			}
+			
+			if(verbose > 7) {
+				user.setVL(this, user.getVL(this) + 1);
+				verbose = 0;
+				Alert(player, Color.Gray + "Reason: " + Color.White + "Heuristic");
+			}
+			this.location.put(player.getUniqueId(), player.getLocation());
+			this.aimVerbose.put(player.getUniqueId(), verbose);
+		}
+		//if(event instanceof PacketKillauraEvent) {
+			//PacketKillauraEvent e = (PacketKillauraEvent) event;
+			//if(e.getType() != PacketTypes.USE) {
+			//	return;
+			//}
+			
+			//Player player = e.getPlayer();
+			//User user = Keaton.getUserManager().getUser(player.getUniqueId());
+		   //int verbose = autismVerbose.getOrDefault(player.getUniqueId(), 0);
 		    
 		    //if(MathUtils.elapsed(user.getLastFlyPacket(), 51L) && Math.abs(MathUtils.elapsed(user.getLastPosPacket()) - 100) < 2) {
 		    	 //   verbose++;
@@ -94,13 +134,13 @@ public class KillAuraA extends Checks {
 		    //	    verbose = 0;
 		   // }
 		    
-		    if(verbose > 3) {
-		    	    user.setVL(this, user.getVL(this) + 1);
-		    	    verbose = 0;
-		    	    Alert(player, Color.Gray + "Reason: " + Color.White + "Stupidly Simple " + Color.Gray + "Ping: " + Keaton.getAC().getPing().getPing(player));
-		    }
+		    //if(verbose > 3) {
+		    	//    user.setVL(this, user.getVL(this) + 1);
+		    //	    verbose = 0;
+		    //    Alert(player, Color.Gray + "Reason: " + Color.White + "Stupidly Simple " + Color.Gray + "Ping: " + Keaton.getAC().getPing().getPing(player));
+		    //}
 		    //autismVerbose.put(player.getUniqueId(), verbose);
-		}
+		//}
 		if(event instanceof PacketKillauraEvent) {
 			PacketKillauraEvent e = (PacketKillauraEvent) event;
 			if(e.getType() != PacketTypes.USE) {
@@ -208,6 +248,12 @@ public class KillAuraA extends Checks {
 			}
 			if(this.autismVerbose.containsKey(uuid)) {
 				this.autismVerbose.remove(uuid);
+			}
+			if(aimVerbose.containsKey(uuid)) {
+				aimVerbose.remove(uuid);
+			}
+			if(location.containsKey(uuid)) {
+				location.remove(uuid);
 			}
 		}
 	}

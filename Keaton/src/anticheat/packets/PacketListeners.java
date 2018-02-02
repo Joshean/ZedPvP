@@ -218,7 +218,7 @@ public class PacketListeners {
 		                CustomLocation customLocation4 = new CustomLocation(posX, posY, posZ, yaw2, pitch2);
 		                Keaton.getUserManager().getUser(player.getUniqueId()).addMovePacket(customLocation4);
 						Bukkit.getServer().getPluginManager().callEvent(new anticheat.packets.events.PacketEvent(player,
-								null, null, player.getLocation().getYaw(), player.getLocation().getPitch(), PacketTypes.POSITION));
+								null, null, player.getLocation().getYaw(), player.getLocation().getPitch(), PacketTypes.POSLOOK));
 					}
 				});
 		ProtocolLibrary.getProtocolManager().addPacketListener(

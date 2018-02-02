@@ -66,10 +66,10 @@ public class ScoreboardProvider implements SidebarProvider {
         if(cc.funkemunky.ZedPvP.Core.getInstance().getCooldownManager().hasCooldown(player, CooldownType.CRAPPLE)) {
     	    lines.add(entry(Color.Dark_Gray + "» " + Color.Yellow + "Apple: " + Color.White + DurationFormatter.getRemaining(Core.getInstance().getCooldownManager().getCooldown(player, CooldownType.CRAPPLE).getTime(), true)));
         }
-        if(Core.getInstance().getKothManager().getAllActiveKoths().size() > 0) {
+        if(Core.getInstance().getKoth().getKothHandler().getRunningKoths().size() > 0) {
         	    lines.add(entry(Color.Red + "Koths:"));
-        	    for(Koth koth : Core.getInstance().getKothManager().getAllActiveKoths()) {
-        	    	    lines.add(entry(Color.Dark_Gray + "» " + Color.Blue + koth.getName() + ": " + Color.White + DurationFormatter.getRemaining(koth.getTimeLeft(), true)));
+        	    for(RunningKoth koth : Core.getInstance().getKoth().getKothHandler().getRunningKoths()) {
+        	    	    lines.add(entry(Color.Dark_Gray + "» " + Color.Blue + koth.getKoth().getName() + ": " + Color.White + koth.getTimeObject().getTimeLeftFormatted()));
         	    }
         }
         lines.add(entry(Color.White + Color.Dark_Gray + Color.Strikethrough + "--------------------"));

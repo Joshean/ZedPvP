@@ -7,11 +7,11 @@ import java.util.List;
 import org.bukkit.event.Event;
 
 import anticheat.Keaton;
+import anticheat.checks.combat.AimPattern;
 import anticheat.checks.combat.AutoClicker;
 import anticheat.checks.combat.Criticals;
 import anticheat.checks.combat.Fastbow;
 import anticheat.checks.combat.KillAuraA;
-import anticheat.checks.combat.Range;
 import anticheat.checks.combat.Reach;
 import anticheat.checks.combat.Regen;
 import anticheat.checks.movement.Fly;
@@ -63,7 +63,7 @@ public class ChecksManager {
 		new Timer();
 		new AutoClicker();
 		new Velocity();
-		new Range();
+		new AimPattern();
 	}
 
 	public void event(Event event) {
